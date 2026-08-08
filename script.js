@@ -58,16 +58,20 @@ entryEl.addEventListener('input', ()=>{
 
 function setNeedle(emotion){
   const angle = ANGLES[emotion];
-  needle.style.transform = `rotate(${angle}deg)`;
+  if(angle !== undefined){
+    needle.style.transform = `rotate(${angle}deg)`;
+  }
 }
 
 function setBackgroundTint(emotion){
   // Subtle wash of the dominant emotion color into the page background
   const color = COLORS[emotion];
-  document.body.style.backgroundColor = hexToTintedPaper(color);
+  const tint = hexToTintedPaper(color);
+  if(tint){ document.body.style.backgroundColor = tint; }
 }
 
 function hexToTintedPaper(hex){
+  if(!hex){ return null; }
   const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
   const baseR=231, baseG=236, baseB=239; // matches --paper
   const mix = (a,b_)=> Math.round(a*0.88 + b_*0.12);
@@ -128,6 +132,7 @@ async function analyze(){
     }
 
     const data = await res.json();
+    console.log('API response:', data);
     const emotion = data.emotion;
 
     setNeedle(emotion);
