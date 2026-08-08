@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Emotional Weather Station</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,72,400;0,72,500;1,72,400;1,72,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Text Analysis Instrument &middot; No. 6 Condition Gauge</div>
+  <h1>Emotional Weather Station</h1>
+  <p class="sub">Log an entry below. The gauge reads the emotional pressure in your words and points to the prevailing condition.</p>
+
+  <div class="instrument">
+    <div class="logbook">
+      <label class="field-label" for="entry">Logbook entry</label>
+      <textarea id="entry" placeholder="Write a sentence or two, exactly as you'd say it&hellip;"></textarea>
+      <div class="toolbar">
+        <span class="charcount" id="charcount">0 characters</span>
+        <button class="analyze" id="analyzeBtn">Read the gauge</button>
+      </div>
+      <div class="error-line" id="errorLine"></div>
+    </div>
+
+    <div class="dial-panel">
+      <div class="dial-wrap">
+        <svg class="dial" viewBox="0 0 220 220">
+          <circle cx="110" cy="110" r="98" fill="none" stroke="#C9D2D8" stroke-width="1.5" />
+          <circle cx="110" cy="110" r="86" fill="none" stroke="#C9D2D8" stroke-width="1" stroke-dasharray="2 4" />
+          <!-- ticks + labels placed by JS -->
+          <g id="ticks"></g>
+          <line id="needleLine" class="needle" x1="110" y1="110" x2="110" y2="34" stroke="#1B2430" stroke-width="3" stroke-linecap="round" />
+          <circle cx="110" cy="110" r="7" fill="#B08D57" stroke="#8A6E42" stroke-width="1.5" />
+        </svg>
+      </div>
+      <div class="reading" id="reading">
+        <div class="placeholder">Awaiting entry&hellip;</div>
+      </div>
+    </div>
+
+    <div class="scores" id="scoresBlock" style="display:none;">
+      <div class="scores-title">Full readout</div>
+      <div id="scoreRows"></div>
+    </div>
+  </div>
+
+  <div class="settings">
+    <span>API endpoint</span>
+    <input id="apiUrl" value="http://localhost:8000/predict" />
+  </div>
+
+  <div class="log">
+    <div class="log-title">Recent readings</div>
+    <div id="logEntries"></div>
+  </div>
+</div>
+
+<footer>Emotional Weather Station &middot; reads sadness, anger, love, surprise, fear &amp; joy from short text entries.</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
