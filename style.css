@@ -250,6 +250,7 @@ svg.dial{ width: 220px; height: 220px; display:block; }
   border: 1px solid var(--paper-line);
 }
 .bar-fill{
+  display: block;
   height: 100%;
   width: 0%;
   border-radius: 2px;
