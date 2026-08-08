@@ -18,6 +18,9 @@ VECTORIZER_PATH = os.path.join(BASE_DIR, "tfidf_vectorizer.pkl")
 model = joblib.load(MODEL_PATH)
 tfidf_vectorizer = joblib.load(VECTORIZER_PATH)
 
+# Label index -> emotion name, based on order of first appearance in train.txt
+EMOTION_LABELS = ["sadness", "anger", "love", "surprise", "fear", "joy"]
+
 
 app = FastAPI(title="Emotion Detection API")
 
@@ -25,7 +28,7 @@ app = FastAPI(title="Emotion Detection API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"]
 )
@@ -49,8 +52,19 @@ def predict(data: EmotionInput):
     text_tfidf = tfidf_vectorizer.transform([data.text])
 
     # Predict emotion
-    prediction = model.predict(text_tfidf)[0]
+    prediction = int(model.predict(text_tfidf)[0])
+    emotion_name = EMOTION_LABELS[prediction]
+
+    # Confidence scores for every emotion (for richer frontend display)
+    scores = {}
+    if hasattr(model, "predict_proba"):
+        probabilities = model.predict_proba(text_tfidf)[0]
+        # probabilities[i] corresponds to model.classes_[i]
+        for probability, class_index in zip(probabilities, model.classes_):
+            scores[EMOTION_LABELS[int(class_index)]] = round(float(probability), 4)
 
     return {
-        "emotion": int(prediction)
+        "emotion": emotion_name,
+        "emotion_id": prediction,
+        "scores": scores
     }
