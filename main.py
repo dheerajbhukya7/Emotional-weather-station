@@ -2,7 +2,7 @@ import joblib
 import os
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -35,7 +35,7 @@ app.add_middleware(
 
 
 class EmotionInput(BaseModel):
-    text: str
+    text: str = Field(min_length=1, max_length=5000)
 
 
 @app.get("/")
